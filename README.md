@@ -1,1 +1,3 @@
 # GUI-Drone-Simulation
+
+The project deals with the design and the implementation of a graphical user interface application for the simulation of swarm drone network control and flight trajectories. The application will require the design of flight patterns depending on the input mission from the operator, and continuously displaying swarm parameters such as autonomy, altitude, speed etc... Several scenarios will be designed, including environment settings and 2D objects.
