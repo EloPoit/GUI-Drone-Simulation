@@ -1,8 +1,23 @@
-import tkinter as tk
+from tkinter import *
 
-window = tk.Tk()
-text_box = tk.Text()
-text_box.pack()
-text_box.get()
+window = Tk()
+
+label = Label(window, text="Hello")
+label.pack()
+
+entry = Entry(window)
+entry.pack()
+entry.focus()
+
+
+
+def clicked():
+    if entry.get() == "yes" :
+        label.configure(text="YESSSSSS")
+
+
+btn = Button(window, text="Click Me", bg="white", fg="red", command=clicked)
+btn.pack()
+
 
 window.mainloop()
