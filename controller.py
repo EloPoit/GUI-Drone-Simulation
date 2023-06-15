@@ -1,21 +1,15 @@
 from tkinter import *
 import model, view, utils
 
-class update_number(utils.Observer) :
+"""class update_number(utils.Observer) :
     def __init__(self, view) :
         super()
         self.view = view
 
     def action(self, swarm):
         self.view.number.text = swarm.number
+"""
 
-class on_click :
-    def __init__(self, view) :
-        super()
-        self.view = view
-    
-    def action(self, swarm) :
-        self.view.update_status(self)
 
 """class add_marker :
     def __init__(self, view):
@@ -59,21 +53,26 @@ class update_direction(utils.Observer) :
         return super().action(observable)
 '''
 
-class Controller :
-    def __init__(self, model):
-        self.root = Tk()
+class SwarmController :
+    def __init__(self,model, view) :
         self.model = model
-        self.view = view.View(self.root)
+        self.view = view
 
-        self.model.add_observers(on_click(self, self.view))
+        self.view.print_swarm(self.model.position)
+        print("print_swarm")
 
-        self.view.number
-
-    def left_click_event(self) :
-        on_click(self, self.view)
+        self.view.print_info(self, model.number, model.position, model.area, model.speed, model.direction)
+        print("print_info")
 
 
-    def run(self):
-        self.root.title("GUI Drones Simulation")
-        self.root.deiconify()
-        self.root.mainloop()
+    def on_click(self) :
+        self.view.print_info(self, model.number, model.position, model.area, model.speed, model.direction)
+
+
+
+"""
+class Controller :
+    def __init__(self, model, view):
+        self.model = model
+        self.view = view
+"""

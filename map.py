@@ -20,9 +20,11 @@ status_text.place(x=0, y=0)
 number = Label(status_window, text="Number", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
 number.place(x=0, y=50) 
 
-canvas = Canvas()
+marker_2 = map_widget.set_marker(52.516268, 13.377695, text="Brandenburger Tor")
+
+"""canvas = Canvas()
 
 canvas.create_oval(10, 10, 80, 80, outline = "black", fill = "white",width = 2)
 canvas.pack()
-
-#root.mainloop()
+"""
+root.mainloop()
