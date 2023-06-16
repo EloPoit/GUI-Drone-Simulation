@@ -58,10 +58,11 @@ class SwarmController :
         self.model = model
         self.view = view
 
-        self.view.print_swarm(self.model.position)
+        self.view.swarm_view.print_swarm(self.view.map_view, self.model.position)
         print("print_swarm")
 
-        self.view.print_info(self, model.number, model.position, model.area, model.speed, model.direction)
+        print(model.number)
+        self.view.swarm_view.print_info(model.number, model.position, model.area, model.speed, model.direction)
         print("print_info")
 
 
@@ -70,9 +71,3 @@ class SwarmController :
 
 
 
-"""
-class Controller :
-    def __init__(self, model, view):
-        self.model = model
-        self.view = view
-"""

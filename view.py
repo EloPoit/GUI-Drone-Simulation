@@ -1,14 +1,14 @@
 from tkinter import *
 import tkintermapview
-import model
+from tkinter import ttk
+import tkinter as tk
 
-
-class MapView :
-    def __init__(self,  root) :
+class MapView() :
+    def __init__(self, root) :
         self.root = root
 
         # create map widget
-        self.map_widget = tkintermapview.TkinterMapView(root, width=1920, height=1080, corner_radius=0)
+        self.map_widget = tkintermapview.TkinterMapView(self.root, width=1920, height=1080, corner_radius=0)
         self.map_widget.place(relx=0.5, rely=0.5, anchor=CENTER)
 
         # use classic google map
@@ -18,19 +18,21 @@ class MapView :
         self.map_widget.set_position(48.860381, 2.338594)
 
 
-class SwarmView :
-    def __init__(self, root): 
+class SwarmView(tk.Tk) : 
+    def __init__(self, root) :
         self.root = root
- 
-        
 
-    def print_swarm(self, position) :
+
+    def print_swarm(self, map_view, position) :
         pos = position.split()
-        self.map_widget.set_polygon([(pos[0], pos[1])],
-                                        fill_color=None,
+        print(float(pos[0]))
+        print(map_view.map_widget)
+        map_view.map_widget.set_polygon([(float(pos[0]), float(pos[1]))],
+                                        fill_color="red",
                                         outline_color="red",
                                         border_width=35,
                                         command=self.swarm_click)
+        print("cest fait")
 
 
     def swarm_click(self, polygon):
@@ -51,7 +53,7 @@ class SwarmView :
         number = Label(status_window, text="Number", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         number.place(x=0, y=35) 
 
-        number_value = Label(status_window, text=number, bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
+        number_value = Label(status_window, text=str(number), bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         number_value.place(x=70, y=35) 
 
         position = Label(status_window, text="Position", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
@@ -86,17 +88,18 @@ class StatusView :
 
 
 
-class View :
+class View(tk.Tk) :
     def __init__(self):
-        #self.controller = controller
-        self.root = Tk()
+        super().__init__()
+        #self.root = Tk()
 
         # create tkinter window
-        self.root.geometry(f"{1920}x{1080}")
+        #self.geometry(f"{1920}x{1080}")
 
         # create the maps
-        map_view = MapView(self.root)
+        self.map_view = MapView(self)
+        print("MapView")
+        self.swarm_view = SwarmView(self)
+        print("SwarmView")
 
-        swarm_view = SwarmView(self.root)
-
-        self.root.mainloop()
+        

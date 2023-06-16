@@ -2,7 +2,7 @@ import utils
 
 class Swarm(utils.Observable):
     def __init__(self, number, position, area, speed, direction):
-        super()
+        super().__init__()
         self.number = number
         self.position = position
         self.area = area

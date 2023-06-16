@@ -20,7 +20,21 @@ status_text.place(x=0, y=0)
 number = Label(status_window, text="Number", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
 number.place(x=0, y=50) 
 
-marker_2 = map_widget.set_marker(52.516268, 13.377695, text="Brandenburger Tor")
+# create map widget
+map_widget = tkintermapview.TkinterMapView(root, width=1920, height=1080, corner_radius=0)
+map_widget.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+# use classic google map
+map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
+        
+pos = ["52.516268", "13.377695"]
+
+map_widget.set_polygon([(float(pos[0]), float(pos[1]))],
+                                fill_color="red",
+                                outline_color="red",
+                                border_width=35 )
+
+
 
 """canvas = Canvas()
 
