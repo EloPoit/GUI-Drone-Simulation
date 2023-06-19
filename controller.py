@@ -1,73 +1,24 @@
 from tkinter import *
 import model, view, utils
 
-"""class update_number(utils.Observer) :
-    def __init__(self, view) :
-        super()
-        self.view = view
-
-    def action(self, swarm):
-        self.view.number.text = swarm.number
-"""
-
-
-"""class add_marker :
-    def __init__(self, view):
-        super()
-        self.view = view
-
-    def action(self, swarm)
-
-"""
-'''
-class update_position(utils.Observer) :
-    def __init__(self, view) :
-        super()
-        self.view = view
-
-    def action(self, observable):
-        return super().action(observable)
-
-class update_area(utils.Observer) :
-    def __init__(self, view) :
-        super()
-        self.view = view
-
-    def action(self, observable):
-        return super().action(observable)
-
-class update_speed(utils.Observer) :
-    def __init__(self, view) :
-        super()
-        self.view = view
-
-    def action(self, observable):
-        return super().action(observable)
-
-class update_direction(utils.Observer) :
-    def __init__(self, view) :
-        super()
-        self.view = view
-
-    def action(self, observable):
-        return super().action(observable)
-'''
 
 class SwarmController :
     def __init__(self,model, view) :
         self.model = model
         self.view = view
 
-        self.view.swarm_view.print_swarm(self.view.map_view, self.model.position)
+        """ self.view.swarm_view.print_swarm(self.view.map_view, self.model.position)
         print("print_swarm")
 
         print(model.number)
         self.view.swarm_view.print_info(model.number, model.position, model.area, model.speed, model.direction)
-        print("print_info")
+        print("print_info")"""
 
+    def get_info(self) :
+        """self.model.number = number
+        self.model.position = position
+        self.model.area = area
+        self.model.speed = speed
+        self.model.direction = direction"""
 
-    def on_click(self) :
-        self.view.print_info(self, model.number, model.position, model.area, model.speed, model.direction)
-
-
-
+        self.view.print_info(self.model.number, self.model.position, self.model.area, self.model.speed, self.model.direction)

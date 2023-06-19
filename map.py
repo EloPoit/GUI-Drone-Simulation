@@ -4,6 +4,8 @@ import customtkinter
 import folium
 import pandas as pd
 from IPython.display import display
+from PIL import Image, ImageTk
+import os
 
 root = Tk()
 root.geometry(f"{1920}x{1080}")
@@ -28,11 +30,27 @@ map_widget.place(relx=0.5, rely=0.5, anchor=CENTER)
 map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
         
 pos = ["52.516268", "13.377695"]
-
+"""
 map_widget.set_polygon([(float(pos[0]), float(pos[1]))],
                                 fill_color="red",
                                 outline_color="red",
-                                border_width=35 )
+                                border_width=35,
+                                )"""
+
+def left_click_event(coordinates_tuple) :
+    print("Left click event with coordinates:", coordinates_tuple)
+
+map_widget.add_left_click_map_command(left_click_event)
+
+def clicked(marker) :
+    print("bonjour")
+
+current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+drone_image = ImageTk.PhotoImage(Image.open(os.path.join(current_path, "drone-camera.png")).resize((60, 60)))
+
+
+marker_2 = map_widget.set_marker(52.516268, 13.377695, text="Brandenburger Tor", command=clicked, marker_color_circle="green", icon=drone_image)
+
 
 
 
