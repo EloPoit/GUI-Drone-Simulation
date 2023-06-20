@@ -20,23 +20,36 @@ class AppView() :
         # address you want to print first
         self.map_widget.set_position(52.516268, 13.377695)
 
-        #Status Menu
+        # Status Menu
         self.status_menu()
+        
+        # Print markers
+        # self.print_marker()
 
+
+    def print_marker(self) :
+        self.controller.get_marker_position()
+
+
+    def place_marker(self, lat, long) :
+        # A modifier parce que c'est degueu, appeler plusieurs fois
         current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-        drone_image = ImageTk.PhotoImage(Image.open(os.path.join(current_path, "drone-camera.png")).resize((60, 60)))
-        swarm_marker = self.map_widget.set_marker(52.516268, 13.377695, icon=drone_image, command=self.swarm_clicked)
+        drone_image = ImageTk.PhotoImage(Image.open(os.path.join(current_path, "drone.png")).resize((60, 60)))
+        self.map_widget.set_marker(lat, long, icon=drone_image, command=self.swarm_clicked)
 
     def set_controller(self, controller) :
         self.controller = controller
 
     def swarm_clicked(self, marker) :
-        self.controller.get_info()
+        print(marker.position)
+        self.controller.get_info(marker.position)
 
-    def print_info(self, number, position, area, speed, direction) :
-        self.number_value.configure(text = str(number))
+    def print_info(self, number, lat, long, area, speed, direction) :
+        self.number_value.configure(text = number)
 
-        self.position_value.configure(text = position)
+        self.lat_value.configure(text = lat)
+        
+        self.long_value.configure(text = long)
 
         self.area_value.configure(text = area)
 
@@ -46,8 +59,10 @@ class AppView() :
 
 
     def status_menu(self) : 
-        self.status_window = Frame(self.root, width=300, height=210, bg='grey')
-        self.status_window.place(x=0, y=810)
+        self.status_window = Frame(self.root, width=300, height=230, bg='grey')
+        self.status_window.grid(row = 0,column = 0, sticky=SW)
+                
+        #self.status_window.place(x=0, y=790)
 
         self.status_text = Label(self.status_window, text="Status", bg="grey", anchor=W, font=("Arial", 16), fg="white", padx=5, pady=5)
         self.status_text.place(x=0, y=0) 
@@ -56,31 +71,37 @@ class AppView() :
         self.number.place(x=0, y=35) 
 
         self.number_value = Label(self.status_window, text="", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
-        self.number_value.place(x=70, y=35) 
+        self.number_value.place(x=80, y=35) 
 
-        self.position = Label(self.status_window, text="Position", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
-        self.position.place(x=0, y=65) 
+        self.lat = Label(self.status_window, text="Latitude", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
+        self.lat.place(x=0, y=65) 
 
-        self.position_value = Label(self.status_window, text="", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
-        self.position_value.place(x=70, y=65) 
+        self.lat_value = Label(self.status_window, text="", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
+        self.lat_value.place(x=80, y=65) 
+        
+        self.long = Label(self.status_window, text="Longitude", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
+        self.long.place(x=0, y=95) 
+
+        self.long_value = Label(self.status_window, text="", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
+        self.long_value.place(x=80, y=95) 
 
         self.area = Label(self.status_window, text="Area", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
-        self.area.place(x=0, y=95) 
+        self.area.place(x=0, y=125) 
 
         self.area_value = Label(self.status_window, text="", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
-        self.area_value.place(x=70, y=95) 
+        self.area_value.place(x=80, y=125) 
 
         self.speed = Label(self.status_window, text="Speed", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
-        self.speed.place(x=0, y=125) 
+        self.speed.place(x=0, y=155) 
 
         self.speed_value = Label(self.status_window, text="", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
-        self.speed_value.place(x=70, y=125) 
+        self.speed_value.place(x=80, y=155) 
 
         self.direction = Label(self.status_window, text="Direction", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
-        self.direction.place(x=0, y=155) 
+        self.direction.place(x=0, y=185) 
 
         self.direction_value = Label(self.status_window, text="", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
-        self.direction_value.place(x=70, y=155) 
+        self.direction_value.place(x=80, y=185) 
 
 
 

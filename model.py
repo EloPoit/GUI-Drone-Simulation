@@ -1,27 +1,22 @@
 import utils
 
-class Swarm(utils.Observable):
-    def __init__(self, number, position, area, speed, direction):
-        super().__init__()
+
+class Swarm():
+    def __init__(self, number, lat, long, area, speed, direction):
         self.number = number
-        self.position = position
+        self.lat = lat
+        self.long = long
         self.area = area
         self.speed = speed
         self.direction = direction
     
-    def addDrone(self) :
-        self.set_number(self.number + 1)
-
-    def deleteDrone(self) :
-        self.set_number(self.number - 1)
-
-    def set_number(self, x) :
-        if (self.number == x) :
-            return
+    
+class SwarmList :
+    def __init__(self) :
+        self.swarm_list = []
         
-        self.number = x
-        self.set_changed(self)
-        self.notify_observers(self)
+    def add(self, swarm) :
+        self.swarm_list.append(swarm)
 
 
 
