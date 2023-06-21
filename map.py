@@ -6,6 +6,7 @@ import pandas as pd
 from IPython.display import display
 from PIL import Image, ImageTk
 import os
+from tkinter import ttk
 
 root = Tk()
 root.geometry(f"{1920}x{1080}")
@@ -23,12 +24,12 @@ number = Label(status_window, text="Number", bg="grey", anchor=W, font=("Arial",
 number.place(x=0, y=50) 
 
 # create map widget
-map_widget = tkintermapview.TkinterMapView(root, width=1920, height=1080, corner_radius=0)
+"""map_widget = tkintermapview.TkinterMapView(root, width=1920, height=1080, corner_radius=0)
 map_widget.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 # use classic google map
 map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
-        
+ """       
 pos = ["52.516268", "13.377695"]
 """
 map_widget.set_polygon([(float(pos[0]), float(pos[1]))],
@@ -40,18 +41,17 @@ map_widget.set_polygon([(float(pos[0]), float(pos[1]))],
 def left_click_event(coordinates_tuple) :
     print("Left click event with coordinates:", coordinates_tuple)
 
-map_widget.add_left_click_map_command(left_click_event)
+#map_widget.add_left_click_map_command(left_click_event)
 
 def clicked(marker) :
     print("bonjour")
 
-current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-drone_image = ImageTk.PhotoImage(Image.open(os.path.join(current_path, "drone-camera.png")).resize((60, 60)))
 
-
-marker_2 = map_widget.set_marker(52.516268, 13.377695, text="Brandenburger Tor", command=clicked, marker_color_circle="green", icon=drone_image)
-
-
+frame_button = Frame(root)
+#frame_button.pack()
+vlist = ["By elements - Points", "By elements - Surfaces", "By groups"]
+view_button = ttk.Combobox(frame_button, values = vlist)
+view_button.set("Choose a view")
 
 
 """canvas = Canvas()

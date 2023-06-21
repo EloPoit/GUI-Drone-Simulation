@@ -11,6 +11,7 @@ class SwarmController :
         for swarm in self.model.swarm_list :
             self.view.place_marker(swarm.lat, swarm.long)
 
+    
 
     def get_info(self, position) :
         (lat, long) = position

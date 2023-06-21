@@ -11,7 +11,7 @@ class AppView() :
         self.controller = None
 
         # create map widget
-        self.map_widget = tkintermapview.TkinterMapView(self.root, width=1920, height=1080, corner_radius=0)
+        self.map_widget = tkintermapview.TkinterMapView(self.root, width=1920, height=1015, corner_radius=0)
         self.map_widget.place(relx=0.5, rely=0.5, anchor=CENTER)
 
         # use classic google map
@@ -23,25 +23,35 @@ class AppView() :
         # Status Menu
         self.status_menu()
         
-        # Print markers
-        # self.print_marker()
-
+        # Button to change view
+        frame_button = Frame(self.root)
+        #frame_button.pack()
+        vlist = ["By elements - Points", "By elements - Surfaces", "By groups"]
+        self.view_button = ttk.Combobox(frame_button, values = vlist)
+        self.view_button.set("Choose a view")
+        
+        # Image of the drones
+        self.current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+        self.drone_classic = ImageTk.PhotoImage(Image.open(os.path.join(self.current_path, "drone.png")).resize((60, 60)))
+        self.drone_blanc = ImageTk.PhotoImage(Image.open(os.path.join(self.current_path, "drone_blanc.png")).resize((60, 60)))
 
     def print_marker(self) :
         self.controller.get_marker_position()
 
-
-    def place_marker(self, lat, long) :
-        # A modifier parce que c'est degueu, appeler plusieurs fois
-        current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-        drone_image = ImageTk.PhotoImage(Image.open(os.path.join(current_path, "drone.png")).resize((60, 60)))
-        self.map_widget.set_marker(lat, long, icon=drone_image, command=self.swarm_clicked)
+    def place_marker(self, lat, long) :        
+        self.map_widget.set_marker(lat, long, icon=self.drone_blanc, command=self.swarm_clicked)
 
     def set_controller(self, controller) :
         self.controller = controller
 
     def swarm_clicked(self, marker) :
-        print(marker.position)
+        # When the swarn is clicked, the icon change
+        for m in self.map_widget.canvas_marker_list :
+            if m.position == marker.position :
+                marker.change_icon(self.drone_classic)       
+            else :
+                m.change_icon(self.drone_blanc)
+        # Information from the swarm is retrieved
         self.controller.get_info(marker.position)
 
     def print_info(self, number, lat, long, area, speed, direction) :
@@ -70,37 +80,37 @@ class AppView() :
         self.number = Label(self.status_window, text="Number", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         self.number.place(x=0, y=35) 
 
-        self.number_value = Label(self.status_window, text="", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
+        self.number_value = Label(self.status_window, text="-", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         self.number_value.place(x=80, y=35) 
 
         self.lat = Label(self.status_window, text="Latitude", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         self.lat.place(x=0, y=65) 
 
-        self.lat_value = Label(self.status_window, text="", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
+        self.lat_value = Label(self.status_window, text="-", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         self.lat_value.place(x=80, y=65) 
         
         self.long = Label(self.status_window, text="Longitude", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         self.long.place(x=0, y=95) 
 
-        self.long_value = Label(self.status_window, text="", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
+        self.long_value = Label(self.status_window, text="-", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         self.long_value.place(x=80, y=95) 
 
         self.area = Label(self.status_window, text="Area", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         self.area.place(x=0, y=125) 
 
-        self.area_value = Label(self.status_window, text="", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
+        self.area_value = Label(self.status_window, text="-", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         self.area_value.place(x=80, y=125) 
 
         self.speed = Label(self.status_window, text="Speed", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         self.speed.place(x=0, y=155) 
 
-        self.speed_value = Label(self.status_window, text="", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
+        self.speed_value = Label(self.status_window, text="-", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         self.speed_value.place(x=80, y=155) 
 
         self.direction = Label(self.status_window, text="Direction", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         self.direction.place(x=0, y=185) 
 
-        self.direction_value = Label(self.status_window, text="", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
+        self.direction_value = Label(self.status_window, text="-", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         self.direction_value.place(x=80, y=185) 
 
 
