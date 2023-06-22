@@ -7,11 +7,12 @@ class SwarmController :
         self.model = model
         self.view = view
 
+
+    def get_marker_position(self) :
         # Print the marker for all the swarms
         for swarm in self.model.swarm_list :
             self.view.place_marker(swarm.lat, swarm.long)
 
-    
 
     def get_info(self, position) :
         (lat, long) = position

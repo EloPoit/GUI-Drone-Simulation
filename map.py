@@ -7,12 +7,13 @@ from IPython.display import display
 from PIL import Image, ImageTk
 import os
 from tkinter import ttk
+import tkinter as tk
 
 root = Tk()
 root.geometry(f"{1920}x{1080}")
 
 btn = Button(root, text="Click Me", bg="black", fg="red")
-btn.pack()
+#btn.pack()
 
 status_window = Frame(root, width=300, height=180, bg='grey')
 status_window.place(x=0, y=837)
@@ -47,12 +48,13 @@ def clicked(marker) :
     print("bonjour")
 
 
-frame_button = Frame(root)
-#frame_button.pack()
-vlist = ["By elements - Points", "By elements - Surfaces", "By groups"]
-view_button = ttk.Combobox(frame_button, values = vlist)
-view_button.set("Choose a view")
+var = IntVar()
+R1 = Radiobutton(root, text="Option 1", variable=var, value=1)
 
+
+R2 = Radiobutton(root, text="Option 2", variable=var, value=2)
+
+R3 = Radiobutton(root, text="Option 3", variable=var, value=3)
 
 """canvas = Canvas()
 

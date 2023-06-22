@@ -23,26 +23,30 @@ class AppView() :
         # Status Menu
         self.status_menu()
         
-        # Button to change view
-        frame_button = Frame(self.root)
-        #frame_button.pack()
-        vlist = ["By elements - Points", "By elements - Surfaces", "By groups"]
-        self.view_button = ttk.Combobox(frame_button, values = vlist)
-        self.view_button.set("Choose a view")
+        # View Status
+        self.var = IntVar()
+        self.view_menu()
+        
+        
         
         # Image of the drones
         self.current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
         self.drone_classic = ImageTk.PhotoImage(Image.open(os.path.join(self.current_path, "drone.png")).resize((60, 60)))
         self.drone_blanc = ImageTk.PhotoImage(Image.open(os.path.join(self.current_path, "drone_blanc.png")).resize((60, 60)))
 
+
+    def set_controller(self, controller) :
+        self.controller = controller
+
+
+    ## For the view by element ##
+
     def print_marker(self) :
+        self.map_widget.delete_all_marker() 
         self.controller.get_marker_position()
 
     def place_marker(self, lat, long) :        
         self.map_widget.set_marker(lat, long, icon=self.drone_blanc, command=self.swarm_clicked)
-
-    def set_controller(self, controller) :
-        self.controller = controller
 
     def swarm_clicked(self, marker) :
         # When the swarn is clicked, the icon change
@@ -68,13 +72,22 @@ class AppView() :
         self.direction_value.configure(text = direction)
 
 
+    ## For the view by surface ##
+    def print_surface(self) :
+        self.map_widget.delete_all_marker() 
+        print("surface")
+
+    ## For the view by groups ##
+    def print_groups(self) :
+        self.map_widget.delete_all_marker()
+        print("groups")
+
+
     def status_menu(self) : 
         self.status_window = Frame(self.root, width=300, height=230, bg='grey')
         self.status_window.grid(row = 0,column = 0, sticky=SW)
                 
-        #self.status_window.place(x=0, y=790)
-
-        self.status_text = Label(self.status_window, text="Status", bg="grey", anchor=W, font=("Arial", 16), fg="white", padx=5, pady=5)
+        self.status_text = Label(self.status_window, text="STATUS", bg="grey", anchor=W, font=("Arial", 16), fg="white", padx=5, pady=5)
         self.status_text.place(x=0, y=0) 
 
         self.number = Label(self.status_window, text="Number", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
@@ -113,8 +126,43 @@ class AppView() :
         self.direction_value = Label(self.status_window, text="-", bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
         self.direction_value.place(x=80, y=185) 
 
+    def view_menu(self) : 
+        self.view_window = Frame(self.root, width=300, height=230, bg='grey')
+        self.view_window.grid(row = 0,column = 0, sticky=SE)
+
+        self.view_text = Label(self.view_window, text="VIEW", bg="grey", anchor=W, font=("Arial", 16), fg="white", padx=5, pady=5)
+        self.view_text.place(x=0, y=0) 
+        
+        
+        R1 = Radiobutton(self.view_window, text="By elements - Points", variable=self.var, value=1, padx=5, pady=5, 
+                         background="grey", font=("Arial", 12), activebackground="grey", command = self.print_marker)
+        R1.place(x=0, y=40) 
+        
+        R2 = Radiobutton(self.view_window, text="By elements - Surfaces", variable=self.var, value=2, padx=5, pady=5, 
+                         background="grey", font=("Arial", 12), activebackground="grey", command=self.print_surface)
+        R2.place(x=0, y=90)
+        
+        R3 = Radiobutton(self.view_window, text="By groups", variable=self.var, value=3, padx=5, pady=5, 
+                         background="grey", font=("Arial", 12), activebackground="grey", command=self.print_groups)
+        R3.place(x=0, y=140)
 
 
+        
+        
+
+    """# Button to change view
+    selected_month = tk.StringVar()
+    vlist = ["By elements - Points", "By elements - Surfaces", "By groups"]
+    month_cb = ttk.Combobox(root, textvariable=selected_month, values=vlist, background="grey", font="Arial 16 bold")
+    month_cb.set("Choose a view")
+    month_cb['state'] = 'readonly'
+    month_cb.grid(row = 0, column = 0, sticky=SE, padx=10, pady=10)
+
+    def callbackFunction(event) :
+        country = event.widget.get()
+        print(country)
+
+    month_cb.bind("<<ComboboxSelected>>", callbackFunction)"""
 
 class SwarmView() : 
     def __init__(self, map_widget, app_view) :
