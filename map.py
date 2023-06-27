@@ -25,19 +25,22 @@ number = Label(status_window, text="Number", bg="grey", anchor=W, font=("Arial",
 number.place(x=0, y=50) 
 
 # create map widget
-"""map_widget = tkintermapview.TkinterMapView(root, width=1920, height=1080, corner_radius=0)
+map_widget = tkintermapview.TkinterMapView(root, width=1920, height=1080, corner_radius=0)
 map_widget.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 # use classic google map
 map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
- """       
-pos = ["52.516268", "13.377695"]
-"""
-map_widget.set_polygon([(float(pos[0]), float(pos[1]))],
-                                fill_color="red",
-                                outline_color="red",
-                                border_width=35,
-                                )"""
+       
+pos1 = ["52.516268", "13.377695"]
+pos2 = ["46.548312", "3.287667"]
+pos3 = ["46.548312", "3.287667"]
+
+map_widget.set_polygon([(52.516268, 13.377695)],
+                        fill_color="red",
+                        outline_color="red",
+                        border_width=12,
+                    )
+
 
 def left_click_event(coordinates_tuple) :
     print("Left click event with coordinates:", coordinates_tuple)
@@ -48,13 +51,23 @@ def clicked(marker) :
     print("bonjour")
 
 
+
+zoom = map_widget.zoom
+print(zoom)
+
+
+"""def print_var() :
+    print(var.get())
+
 var = IntVar()
-R1 = Radiobutton(root, text="Option 1", variable=var, value=1)
+R1 = Radiobutton(root, text="Option 1", variable=var, value=1, command = print_var)
+R1.pack()
 
+R2 = Radiobutton(root, text="Option 2", variable=var, value=2, command = print_var)
+R2.pack()
 
-R2 = Radiobutton(root, text="Option 2", variable=var, value=2)
-
-R3 = Radiobutton(root, text="Option 3", variable=var, value=3)
+R3 = Radiobutton(root, text="Option 3", variable=var, value=3, command = print_var)
+R3.pack()"""
 
 """canvas = Canvas()
 
