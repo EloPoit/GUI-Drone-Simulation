@@ -21,10 +21,9 @@ class Swarm :
         self.direction = direction
     
     def random_position(self) :
-        delta_lat = round(uniform(0.0, 0.15) - 0.1, 7) 
-        delta_long = round(uniform(0.0, 0.3) - 0.1, 7) 
-
-        return (self.lat + delta_lat, self.long + delta_long)
+        delta_lat = uniform(0.0, 0.15) - 0.1
+        delta_long = uniform(0.0, 0.3) - 0.1 
+        return (round(self.lat + delta_lat, 6), round(self.long + delta_long, 6))
     
     def create_drones(self) :
         for i in range(self.number) :

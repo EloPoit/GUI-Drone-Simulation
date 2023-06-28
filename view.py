@@ -25,15 +25,7 @@ class AppView() :
         
         # View Menu
         # called in the controller
-        
-        # get the canva of the zoom_in_button from the map widget
-
-
-        """self.map_widge.bind("<Button-1>", self.zoom_changed())
-        self.map_widget.button_zoom_out.click_command = self.zoom_changed()"""
-
-        
-        
+ 
         # Image of the drones
         self.current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
         self.drone_classic = ImageTk.PhotoImage(Image.open(os.path.join(self.current_path, "drone.png")).resize((60, 60)))
@@ -50,17 +42,21 @@ class AppView() :
     ## For the view by element ##
 
     def place_marker(self, lat, long) :        
-        self.map_widget.set_marker(lat, long, icon=self.drone_blanc, command=self.swarm_clicked)
+        marker = self.map_widget.set_marker(lat, long, icon=self.drone_blanc, command=self.swarm_clicked)
+        print(marker)
+        return marker
+    
 
     def swarm_clicked(self, marker) :
-        # When the swarm is clicked, the icon change
+        # When the swarm is clicked, the icon changes
         for m in self.map_widget.canvas_marker_list :
             if m.position == marker.position :
                 marker.change_icon(self.drone_classic)       
             else :
                 m.change_icon(self.drone_blanc)
         # Information from the swarm is retrieved
-        self.controller.get_info(marker.position)
+        self.controller.get_info(marker)
+
 
     def print_info(self, number, lat, long, area, speed, direction) :
         self.number_value.configure(text = number)
