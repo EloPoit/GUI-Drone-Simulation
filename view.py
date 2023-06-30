@@ -4,6 +4,7 @@ from tkinter import ttk
 import tkinter as tk
 from PIL import Image, ImageTk
 import os
+import sys
 
 class AppView() :
     def __init__(self, root) :
@@ -25,7 +26,15 @@ class AppView() :
         
         # View Menu
         # called in the controller
- 
+
+        # Zoom
+        self.last_zoom = 16
+        
+        self.map_widget.button_zoom_in.add_command(command=self.zoom_in)
+        self.map_widget.button_zoom_out.add_command(command=self.zoom_out)
+        
+        self.map_widget.canvas.bind("<MouseWheel>", self.mouse_zoom)
+
         # Image of the drones
         self.current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
         self.drone_classic = ImageTk.PhotoImage(Image.open(os.path.join(self.current_path, "drone.png")).resize((60, 60)))
@@ -87,22 +96,71 @@ class AppView() :
 
     ## For the view by surface ##
     def print_surface(self) :
-        #self.map_widget.delete_all_marker() 
-        print("surface")
+         print("surface")
 
     ## For the view by groups ##
     def print_groups(self) :
-        #self.map_widget.delete_all_marker()
         print("groups")
 
 
     ### ZOOM ###
-    def zoom_changed(self) :
-        print("zoom changed")
-    
+    def zoom_in(self) :
+        self.last_zoom = self.map_widget.last_zoom
+
+        self.map_widget.set_zoom(self.map_widget.zoom + 1, relative_pointer_x=0.5, relative_pointer_y=0.5)
+        
+        if self.var.get() == 1 :
+            if self.last_zoom <= 9 and self.map_widget.zoom > 9 :
+                #passer du swarm au drones
+                self.map_widget.delete_all_marker()
+                self.print_default()
+                self.controller.drone_marker()
+
+    def zoom_out(self) :
+        self.last_zoom = self.map_widget.last_zoom
+
+        self.map_widget.set_zoom(self.map_widget.zoom - 1, relative_pointer_x=0.5, relative_pointer_y=0.5)
+
+        if self.var.get() == 1 :
+            if self.last_zoom >= 9 and self.map_widget.zoom < 9 :
+                #passer des drones au swarm
+                self.map_widget.delete_all_marker()
+                self.print_default()
+                self.controller.swarm_marker()
+        
+    def mouse_zoom(self, event):
+        relative_mouse_x = event.x / self.map_widget.width  # mouse pointer position on map (x=[0..1], y=[0..1])
+        relative_mouse_y = event.y / self.map_widget.height
+
+        if sys.platform == "darwin":
+            new_zoom = self.zoom + event.delta * 0.1
+        elif sys.platform.startswith("win"):
+            new_zoom = self.map_widget.zoom + event.delta * 0.01
+        elif event.num == 4:
+            new_zoom = self.map_widget.zoom + 1
+        elif event.num == 5:
+            new_zoom = self.map_widget.zoom - 1
+        else:
+            new_zoom = self.map_widget.zoom + event.delta * 0.1
+
+        self.last_zoom = self.map_widget.last_zoom
+
+        self.map_widget.set_zoom(new_zoom, relative_pointer_x=relative_mouse_x, relative_pointer_y=relative_mouse_y)
+
+        if self.var.get() == 1 :
+            if self.last_zoom <= 9 and self.map_widget.zoom > 9 :
+                #passer du swarm au drones
+                self.map_widget.delete_all_marker()
+                self.print_default()
+                self.controller.drone_marker()
+            elif self.last_zoom >= 9 and self.map_widget.zoom < 9 :
+                #passer des drones au swarm
+                self.map_widget.delete_all_marker()
+                self.print_default()
+                self.controller.swarm_marker() 
+                
 
     ### MENUS ###
-
     def status_menu(self) : 
         self.status_window = Frame(self.root, width=300, height=230, bg='grey')
         self.status_window.grid(row = 0,column = 0, sticky=SW)

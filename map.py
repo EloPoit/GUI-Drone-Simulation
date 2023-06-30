@@ -46,14 +46,14 @@ def left_click_event(coordinates_tuple) :
     print("Left click event with coordinates:", coordinates_tuple)
 
 #map_widget.add_left_click_map_command(left_click_event)
+    
+def mouse(event) :
+    print("Mouse event with coordinates:")
+    
+    
+map_widget.canvas.bind("<Button-4>", mouse, add="+")
 
-def clicked(marker) :
-    print("bonjour")
 
-
-
-zoom = map_widget.zoom
-print(zoom)
 
 
 """def print_var() :
