@@ -2,8 +2,8 @@ from tkinter import *
 import tkintermapview
 from tkinter import ttk
 import tkinter as tk
-from PIL import Image, ImageTk
-import os
+
+
 import sys
 
 class AppView() :
@@ -36,10 +36,7 @@ class AppView() :
         self.map_widget.canvas.bind("<MouseWheel>", self.mouse_zoom)
 
         # Image of the drones
-        self.current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-        self.drone_classic = ImageTk.PhotoImage(Image.open(os.path.join(self.current_path, "drone.png")).resize((60, 60)))
-        self.drone_blanc = ImageTk.PhotoImage(Image.open(os.path.join(self.current_path, "drone_blanc.png")).resize((60, 60)))
-
+       
 
     def set_controller(self, controller) :
         self.controller = controller
@@ -50,19 +47,19 @@ class AppView() :
 
     ## For the view by element ##
 
-    def place_marker(self, lat, long) :        
-        marker = self.map_widget.set_marker(lat, long, icon=self.drone_blanc, command=self.swarm_clicked)
+    def place_marker(self, lat, long, icon_size) :        
+        marker = self.map_widget.set_marker(lat, long, icon=icon_size, command=self.marker_clicked)
         print(marker)
         return marker
     
 
-    def swarm_clicked(self, marker) :
+    def marker_clicked(self, marker) :
         # When the swarm is clicked, the icon changes
         for m in self.map_widget.canvas_marker_list :
             if m.position == marker.position :
-                marker.change_icon(self.drone_classic)       
+                marker.change_icon(marker.data.classic)       
             else :
-                m.change_icon(self.drone_blanc)
+                m.change_icon(marker.data.white)
         # Information from the swarm is retrieved
         self.controller.get_info(marker)
 
@@ -95,8 +92,15 @@ class AppView() :
 
 
     ## For the view by surface ##
-    def print_surface(self) :
-         print("surface")
+
+    def print_surface(self, area, lat, long) :
+        print("surface")
+        self.map_widget.set_polygon([(lat, long)],
+                                # fill_color=None,
+                                outline_color="#F08080",
+                                border_width=100,
+                                #command=polygon_click,
+                                )
 
     ## For the view by groups ##
     def print_groups(self) :
@@ -109,24 +113,32 @@ class AppView() :
 
         self.map_widget.set_zoom(self.map_widget.zoom + 1, relative_pointer_x=0.5, relative_pointer_y=0.5)
         
-        if self.var.get() == 1 :
-            if self.last_zoom <= 9 and self.map_widget.zoom > 9 :
+        if self.last_zoom <= 9 and self.map_widget.zoom > 9 :
+            if self.var.get() == 1 :
                 #passer du swarm au drones
                 self.map_widget.delete_all_marker()
                 self.print_default()
                 self.controller.drone_marker()
-
+            elif self.var.get() == 2 :
+                self.map_widget.delete_all_polygon()
+                self.print_default()
+                self.controller.drone_surface()
+                
     def zoom_out(self) :
         self.last_zoom = self.map_widget.last_zoom
 
         self.map_widget.set_zoom(self.map_widget.zoom - 1, relative_pointer_x=0.5, relative_pointer_y=0.5)
 
-        if self.var.get() == 1 :
-            if self.last_zoom >= 9 and self.map_widget.zoom < 9 :
+        if self.last_zoom >= 9 and self.map_widget.zoom < 9 :
+            if self.var.get() == 1 :
                 #passer des drones au swarm
                 self.map_widget.delete_all_marker()
                 self.print_default()
                 self.controller.swarm_marker()
+            elif self.var.get() == 2 :
+                self.map_widget.delete_all_polygon()
+                self.print_default()
+                self.controller.swarm_surface()
         
     def mouse_zoom(self, event):
         relative_mouse_x = event.x / self.map_widget.width  # mouse pointer position on map (x=[0..1], y=[0..1])
@@ -147,17 +159,26 @@ class AppView() :
 
         self.map_widget.set_zoom(new_zoom, relative_pointer_x=relative_mouse_x, relative_pointer_y=relative_mouse_y)
 
-        if self.var.get() == 1 :
-            if self.last_zoom <= 9 and self.map_widget.zoom > 9 :
+        if self.last_zoom <= 9 and self.map_widget.zoom > 9 :
+            if self.var.get() == 1 :
                 #passer du swarm au drones
                 self.map_widget.delete_all_marker()
                 self.print_default()
                 self.controller.drone_marker()
-            elif self.last_zoom >= 9 and self.map_widget.zoom < 9 :
+            elif self.var.get() == 2 :
+                self.map_widget.delete_all_polygon()
+                self.print_default()
+                self.controller.drone_surface()
+        elif self.last_zoom >= 9 and self.map_widget.zoom < 9 :
+            if self.var.get() == 1 :    
                 #passer des drones au swarm
                 self.map_widget.delete_all_marker()
                 self.print_default()
-                self.controller.swarm_marker() 
+                self.controller.swarm_marker()
+            elif self.var.get() == 2 :
+                self.map_widget.delete_all_polygon()
+                self.print_default()
+                self.controller.swarm_surface() 
                 
 
     ### MENUS ###
@@ -212,16 +233,16 @@ class AppView() :
         self.view_text = Label(self.view_window, text="VIEW", bg="grey", anchor=W, font=("Arial", 16), fg="white", padx=5, pady=5)
         self.view_text.place(x=0, y=0) 
         
-        self.R1 = Radiobutton(self.view_window, text="By elements - Points", variable=self.var, value=1, padx=5, pady=5, 
-                         background="grey", font=("Arial", 12), activebackground="grey", command = self.get_view)
+        self.R1 = Radiobutton(self.view_window, text="By elements - Points", variable=self.var, value=1, padx=5, pady=5, foreground="white", background="grey", selectcolor="grey",
+                         font=("Arial", 12), activeforeground="black", activebackground="grey", command = self.get_view)
         self.R1.place(x=0, y=40) 
         
-        self.R2 = Radiobutton(self.view_window, text="By elements - Surfaces", variable=self.var, value=2, padx=5, pady=5, 
-                         background="grey", font=("Arial", 12), activebackground="grey", command=self.get_view)
+        self.R2 = Radiobutton(self.view_window, text="By elements - Surfaces", variable=self.var, value=2, padx=5, pady=5, foreground="white", background="grey", selectcolor="grey",
+                          font=("Arial", 12), activeforeground="black", activebackground="grey", command=self.get_view)
         self.R2.place(x=0, y=90)
         
-        self.R3 = Radiobutton(self.view_window, text="By groups", variable=self.var, value=3, padx=5, pady=5, 
-                         background="grey", font=("Arial", 12), activebackground="grey", command=self.get_view)
+        self.R3 = Radiobutton(self.view_window, text="By groups", variable=self.var, value=3, padx=5, pady=5, foreground="white", background="grey", selectcolor="grey",
+                         font=("Arial", 12), activeforeground="black", activebackground="grey", command=self.get_view)
         self.R3.place(x=0, y=140)
 
 

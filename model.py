@@ -1,5 +1,7 @@
 import utils
 from random import *
+from PIL import Image, ImageTk
+import os
 
 class Drone :
     def __init__(self, swarm, lat, long, area, speed, direction) :
@@ -9,6 +11,11 @@ class Drone :
         self.area = area
         self.speed = speed
         self.direction = direction 
+        
+        self.current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+
+        self.classic = ImageTk.PhotoImage(Image.open(os.path.join(self.current_path, "drone.png")).resize((50, 50)))
+        self.white = ImageTk.PhotoImage(Image.open(os.path.join(self.current_path, "drone_blanc.png")).resize((50, 50)))
 
 class Swarm :
     def __init__(self, number, lat, long, area, speed, direction):
@@ -19,6 +26,12 @@ class Swarm :
         self.area = area
         self.speed = speed
         self.direction = direction
+        
+        self.current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+        
+        self.classic = ImageTk.PhotoImage(Image.open(os.path.join(self.current_path, "drone.png")).resize((60, 60)))
+        self.white = ImageTk.PhotoImage(Image.open(os.path.join(self.current_path, "drone_blanc.png")).resize((60, 60)))
+        
     
     def random_position(self) :
         delta_lat = uniform(0.0, 0.15) - 0.1

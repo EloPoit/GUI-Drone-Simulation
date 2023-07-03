@@ -13,16 +13,20 @@ class SwarmController :
 
 
     def get_marker_position(self, var) :
+        
         if var == 1 :
+            self.view.map_widget.delete_all_polygon()
+            self.view.print_default()
             if self.view.map_widget.canvas_marker_list == [] :
-                self.print_zoom()
+                self.print_element_zoom()
         elif var == 2 :
             self.view.map_widget.delete_all_marker()
             self.view.print_default()
-            for swarm in self.model.swarm_list :
-                self.view.print_surface()
+            if self.view.map_widget.canvas_polygon_list == [] :
+                self.print_surface_zoom()
         else :
             self.view.map_widget.delete_all_marker()
+            self.view.map_widget.delete_all_polygon()
             self.view.print_default()
             for swarm in self.model.swarm_list :
                 self.view.print_groups()
@@ -38,19 +42,37 @@ class SwarmController :
     
     def swarm_marker(self) :
         for swarm in self.model.swarm_list :
-            marker = self.view.place_marker(swarm.lat, swarm.long)
+            marker = self.view.place_marker(swarm.lat, swarm.long, swarm.white)
             marker.data = swarm
      
     def drone_marker(self) :
         for swarm in self.model.swarm_list :
             for drone in swarm.drones :
-                marker = self.view.place_marker(drone.lat, drone.long)
+                marker = self.view.place_marker(drone.lat, drone.long, drone.white)
                 marker.data = drone
      
-    def print_zoom(self) :
+    def print_element_zoom(self) :
         if self.view.map_widget.zoom < 9 :
             # Print the marker for all the swarms
             self.swarm_marker()
         else :
             # Print the marker for all the drones of the different swarms
             self.drone_marker()
+    
+    def print_surface_zoom(self) :
+        if self.view.map_widget.zoom < 9 :
+            # Print the surface for all the swarms
+            self.swarm_surface()
+        else :
+            # Print the surface for all the drones of the different swarms
+            self.drone_surface()
+            
+    def swarm_surface(self) :
+        for swarm in self.model.swarm_list :
+            self.view.print_surface(swarm.area, swarm.lat, swarm.long)
+            
+    def drone_surface(self) :
+        for swarm in self.model.swarm_list :
+            for drone in swarm.drones :
+                self.view.print_surface(drone.area, drone.lat, drone.long)
+            
