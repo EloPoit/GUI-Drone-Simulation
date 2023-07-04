@@ -2,7 +2,7 @@ from tkinter import *
 import tkintermapview
 from tkinter import ttk
 import tkinter as tk
-
+import graham_hull
 
 import sys
 
@@ -32,7 +32,7 @@ class AppView() :
         
         self.map_widget.button_zoom_in.add_command(command=self.zoom_in)
         self.map_widget.button_zoom_out.add_command(command=self.zoom_out)
-        
+     
         self.map_widget.canvas.bind("<MouseWheel>", self.mouse_zoom)
 
         # Image of the drones
@@ -49,7 +49,6 @@ class AppView() :
 
     def place_marker(self, lat, long, icon_size) :        
         marker = self.map_widget.set_marker(lat, long, icon=icon_size, command=self.marker_clicked)
-        print(marker)
         return marker
     
 
@@ -93,12 +92,12 @@ class AppView() :
 
     ## For the view by surface ##
 
-    def print_surface(self, area, lat, long) :
-        print("surface")
-        self.map_widget.set_polygon([(lat, long)],
-                                # fill_color=None,
-                                outline_color="#F08080",
-                                border_width=100,
+    def print_surface(self, position_list) :
+        extern_points = graham_hull.convex_hull_graham(position_list)
+        self.map_widget.set_polygon(extern_points,
+                                outline_color="red",
+                                border_width=5,
+                                fill_color = "blue",
                                 #command=polygon_click,
                                 )
 

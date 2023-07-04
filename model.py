@@ -1,4 +1,3 @@
-import utils
 from random import *
 from PIL import Image, ImageTk
 import os
@@ -20,6 +19,7 @@ class Drone :
 class Swarm :
     def __init__(self, number, lat, long, area, speed, direction):
         self.drones = []
+        self.position_list = []
         self.number = number
         self.lat = lat
         self.long = long
@@ -41,6 +41,7 @@ class Swarm :
     def create_drones(self) :
         for i in range(self.number) :
             (la, lo) = self.random_position()
+            self.position_list.append((la, lo))
             drone = Drone(self, la, lo, self.area, self.speed, self.direction)
             self.drones.append(drone)
 

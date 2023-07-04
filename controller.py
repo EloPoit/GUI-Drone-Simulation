@@ -1,6 +1,5 @@
 from tkinter import *
-import model, view, utils
-
+import model, view
 
 class SwarmController :
     def __init__(self,model, view) :
@@ -62,17 +61,17 @@ class SwarmController :
     def print_surface_zoom(self) :
         if self.view.map_widget.zoom < 9 :
             # Print the surface for all the swarms
-            self.swarm_surface()
+            self.drone_surface()
         else :
             # Print the surface for all the drones of the different swarms
             self.drone_surface()
             
     def swarm_surface(self) :
         for swarm in self.model.swarm_list :
-            self.view.print_surface(swarm.area, swarm.lat, swarm.long)
+            self.view.print_surface(swarm.position_list)
             
     def drone_surface(self) :
         for swarm in self.model.swarm_list :
             for drone in swarm.drones :
-                self.view.print_surface(drone.area, drone.lat, drone.long)
+                self.view.print_surface(swarm.position_list)
             
