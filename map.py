@@ -36,9 +36,13 @@ pos1 = ["52.516268", "13.377695"]
 pos2 = ["46.548312", "3.287667"]
 pos3 = ["46.548312", "3.287667"]
 
+def afficher() :
+    print("Afficher")
+
 map_widget.set_polygon([(52.516268, 13.377695)],
                         fill_color="red",
                         outline_color="red",
+                        command=afficher,
                         border_width=12,
                     )
 

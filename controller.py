@@ -12,7 +12,6 @@ class SwarmController :
 
 
     def get_marker_position(self, var) :
-        
         if var == 1 :
             self.view.map_widget.delete_all_polygon()
             self.view.print_default()
@@ -31,7 +30,7 @@ class SwarmController :
                 self.view.print_groups()
 
     def get_info(self, marker) :
-        (lat, long) = marker.position
+        print("get info")
         data = marker.data
         
         if type(data) == model.Swarm :
@@ -61,17 +60,17 @@ class SwarmController :
     def print_surface_zoom(self) :
         if self.view.map_widget.zoom < 9 :
             # Print the surface for all the swarms
-            self.drone_surface()
+            self.swarm_surface_less()
         else :
             # Print the surface for all the drones of the different swarms
-            self.drone_surface()
-            
-    def swarm_surface(self) :
+            self.swarm_surface_more()
+
+    def swarm_surface_more(self) :
         for swarm in self.model.swarm_list :
-            self.view.print_surface(swarm.position_list)
-            
-    def drone_surface(self) :
+            polygon = self.view.print_surface(swarm.position_list, 5)
+            polygon.data = swarm
+
+    def swarm_surface_less(self) :
         for swarm in self.model.swarm_list :
-            for drone in swarm.drones :
-                self.view.print_surface(swarm.position_list)
-            
+            polygon = self.view.print_surface(swarm.position_list, 60)
+            polygon.data = swarm

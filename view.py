@@ -92,14 +92,16 @@ class AppView() :
 
     ## For the view by surface ##
 
-    def print_surface(self, position_list) :
+    def print_surface(self, position_list, border) :
         extern_points = graham_hull.convex_hull_graham(position_list)
-        self.map_widget.set_polygon(extern_points,
+        print(extern_points)
+        polygon = self.map_widget.set_polygon(extern_points,
                                 outline_color="red",
-                                border_width=5,
+                                border_width=border,
                                 fill_color = "blue",
-                                #command=polygon_click,
+                                command=self.controller.get_info,
                                 )
+        return polygon
 
     ## For the view by groups ##
     def print_groups(self) :
@@ -121,7 +123,7 @@ class AppView() :
             elif self.var.get() == 2 :
                 self.map_widget.delete_all_polygon()
                 self.print_default()
-                self.controller.drone_surface()
+                self.controller.swarm_surface_more()
                 
     def zoom_out(self) :
         self.last_zoom = self.map_widget.last_zoom
@@ -137,7 +139,7 @@ class AppView() :
             elif self.var.get() == 2 :
                 self.map_widget.delete_all_polygon()
                 self.print_default()
-                self.controller.swarm_surface()
+                self.controller.swarm_surface_less()
         
     def mouse_zoom(self, event):
         relative_mouse_x = event.x / self.map_widget.width  # mouse pointer position on map (x=[0..1], y=[0..1])
@@ -158,6 +160,7 @@ class AppView() :
 
         self.map_widget.set_zoom(new_zoom, relative_pointer_x=relative_mouse_x, relative_pointer_y=relative_mouse_y)
 
+
         if self.last_zoom <= 9 and self.map_widget.zoom > 9 :
             if self.var.get() == 1 :
                 #passer du swarm au drones
@@ -167,8 +170,8 @@ class AppView() :
             elif self.var.get() == 2 :
                 self.map_widget.delete_all_polygon()
                 self.print_default()
-                self.controller.drone_surface()
-        elif self.last_zoom >= 9 and self.map_widget.zoom < 9 :
+                self.controller.swarm_surface_more()
+        elif self.last_zoom > 9 and self.map_widget.zoom < 9 :
             if self.var.get() == 1 :    
                 #passer des drones au swarm
                 self.map_widget.delete_all_marker()
@@ -177,8 +180,8 @@ class AppView() :
             elif self.var.get() == 2 :
                 self.map_widget.delete_all_polygon()
                 self.print_default()
-                self.controller.swarm_surface() 
-                
+                self.controller.swarm_surface_less() 
+
 
     ### MENUS ###
     def status_menu(self) : 
@@ -245,64 +248,8 @@ class AppView() :
         self.R3.place(x=0, y=140)
 
 
-        
-        
-
-    """# Button to change view
-    selected_month = tk.StringVar()
-    vlist = ["By elements - Points", "By elements - Surfaces", "By groups"]
-    month_cb = ttk.Combobox(root, textvariable=selected_month, values=vlist, background="grey", font="Arial 16 bold")
-    month_cb.set("Choose a view")
-    month_cb['state'] = 'readonly'
-    month_cb.grid(row = 0, column = 0, sticky=SE, padx=10, pady=10)
-
-    def callbackFunction(event) :
-        country = event.widget.get()
-        print(country)
-
-    month_cb.bind("<<ComboboxSelected>>", callbackFunction)"""
-
-class SwarmView() : 
-    def __init__(self, map_widget, app_view) :
-        self.map_widget = map_widget
-        self.app_view = app_view
-        
-    def print_swarm(self, map_view, position) :
-        pos = position.split()
-        
-        current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-        drone_image = ImageTk.PhotoImage(Image.open(os.path.join(current_path, "drone-camera.png")).resize((60, 60)))
-        swarm_marker = self.map_widget.set_marker(float(pos[0]), float(pos[1]), icon=drone_image)
-
-        print("cest fait")
-
-
-    def print_info(self, number, position, area, speed, direction) :
-        self.app_view.number_value.configure(text = str(number))
-
-        self.app_view.position_value.configure(text = position)
-
-        """area_value = Label(status_window, text=area, bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
-
-        speed_value = Label(status_window, text=speed, bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)
-
-        direction_value = Label(status_window, text=direction, bg="grey", anchor=W, font=("Arial", 12), fg="white", padx=5, pady=5)"""
 
 
 
-
-"""class View() :
-    def __init__(self):
-        
-        #self.root = Tk()
-
-        # create tkinter window
-        #self.geometry(f"{1920}x{1080}")
-
-        # create the maps
-        self.app_view = AppView(self)
-        print("AppView")
-        self.swarm_view = SwarmView(self)
-        print("SwarmView")"""
 
         
